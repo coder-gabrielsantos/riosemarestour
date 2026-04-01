@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Destinations({ destinations }) {
-  const cardsPerPage = 4;
+  const cardsPerPage = 5;
   const [selectedDestination, setSelectedDestination] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
@@ -88,6 +88,8 @@ export default function Destinations({ destinations }) {
   }
 
   const modalImage = selectedDestination?.images?.[currentImageIndex];
+  const topDestinations = visibleDestinations.slice(0, 2);
+  const bottomDestinations = visibleDestinations.slice(2, 5);
 
   function formatDetailedDescription(description) {
     if (!description?.trim()) {
@@ -144,50 +146,124 @@ export default function Destinations({ destinations }) {
   return (
     <>
       <section id="destinos" className="mx-auto max-w-6xl px-4 pb-14 pt-4 sm:px-6 sm:pb-16 lg:px-8">
-        <div className="mb-8 sm:mb-10">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#2a6eb9]">
-              Conheça Camocim
-            </p>
-            <h2 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
-              Escolha seu proximo destino
-            </h2>
+        <div className="mb-8 text-center sm:mb-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#2a6eb9]">
+            Conheça Camocim
+          </p>
+          <h2 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
+            Explore nossos destinos
+          </h2>
+        </div>
+
+        <div className="space-y-2.5 sm:space-y-3">
+          <div className="grid gap-2.5 lg:grid-cols-2 lg:gap-2.5">
+            {topDestinations.map((destination, index) => (
+              <button
+                key={`${destination.id}-${cardsAnimationCycle}`}
+                type="button"
+                onClick={() => openDestination(destination)}
+              className={`group relative overflow-hidden rounded-sm border border-slate-200 text-left shadow-sm transition duration-300 hover:scale-[1.015] hover:shadow-md ${
+                  cardsAnimationCycle > 0 ? "destination-card-enter" : ""
+                }`}
+                style={{ animationDelay: `${index * 85}ms` }}
+              >
+                <div className="relative h-56 sm:h-64 lg:h-[255px]">
+                  {destination.images?.[0] ? (
+                    <Image
+                      src={destination.images[0]}
+                      alt={destination.title}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-slate-100 text-sm text-slate-500">
+                      Adicione a imagem 01 deste destino.
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/25 to-transparent" />
+                </div>
+                <div className="pointer-events-none absolute bottom-0 left-0 p-4 sm:p-5">
+                  <h3 className="text-lg font-medium text-white/95 drop-shadow sm:text-[1.65rem] sm:leading-none">
+                    {destination.title}
+                  </h3>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-2.5">
+            {bottomDestinations.map((destination, index) => (
+              <button
+                key={`${destination.id}-${cardsAnimationCycle}`}
+                type="button"
+                onClick={() => openDestination(destination)}
+              className={`group relative overflow-hidden rounded-sm border border-slate-200 text-left shadow-sm transition duration-300 hover:scale-[1.015] hover:shadow-md ${
+                  cardsAnimationCycle > 0 ? "destination-card-enter" : ""
+                }`}
+                style={{ animationDelay: `${(index + topDestinations.length) * 85}ms` }}
+              >
+                <div className="relative h-52 sm:h-56 lg:h-[230px]">
+                  {destination.images?.[0] ? (
+                    <Image
+                      src={destination.images[0]}
+                      alt={destination.title}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-slate-100 text-sm text-slate-500">
+                      Adicione a imagem 01 deste destino.
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/25 to-transparent" />
+                </div>
+                <div className="pointer-events-none absolute bottom-0 left-0 p-4 sm:p-5">
+                  <h3 className="text-base font-medium text-white/95 drop-shadow sm:text-[1.35rem] sm:leading-none">
+                    {destination.title}
+                  </h3>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
-          {visibleDestinations.map((destination, index) => (
+        {/* Fallback: quando houver menos de 5 itens na página */}
+        {visibleDestinations.length < 3 && (
+          <div className="mt-2.5 grid gap-2.5 sm:grid-cols-2">
+            {visibleDestinations.map((destination, index) => (
             <button
               key={`${destination.id}-${cardsAnimationCycle}`}
               type="button"
               onClick={() => openDestination(destination)}
-              className={`overflow-hidden rounded-3xl border border-slate-200 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
-                cardsAnimationCycle > 0 ? "destination-card-enter" : ""
-              }`}
-              style={{ animationDelay: `${index * 85}ms` }}
-            >
-              <div className="relative h-48 sm:h-56">
-                {destination.images?.[0] ? (
-                  <Image
-                    src={destination.images[0]}
-                    alt={destination.title}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center bg-slate-100 text-sm text-slate-500">
-                    Adicione a imagem 01 deste destino.
-                  </div>
-                )}
-              </div>
-              <div className="p-5 sm:p-6">
-                <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
-                  {destination.title}
-                </h3>
-              </div>
-            </button>
-          ))}
-        </div>
+                className={`group relative overflow-hidden rounded-sm border border-slate-200 text-left shadow-sm transition duration-300 hover:scale-[1.015] hover:shadow-md ${
+                  cardsAnimationCycle > 0 ? "destination-card-enter" : ""
+                }`}
+                style={{ animationDelay: `${index * 85}ms` }}
+              >
+                <div className="relative h-52 sm:h-56">
+                  {destination.images?.[0] ? (
+                    <Image
+                      src={destination.images[0]}
+                      alt={destination.title}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-slate-100 text-sm text-slate-500">
+                      Adicione a imagem 01 deste destino.
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/25 to-transparent" />
+                </div>
+                <div className="pointer-events-none absolute bottom-0 left-0 p-4 sm:p-5">
+                  <h3 className="text-base font-medium text-white/95 drop-shadow">
+                    {destination.title}
+                  </h3>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
 
         {totalPages > 1 && (
           <div className="mt-7 flex flex-wrap items-center justify-center gap-2 sm:mt-8 sm:gap-3">

@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f2f8ff;
+  --foreground: #1f3266;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-sora);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-sora), var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  letter-spacing: -0.01em;
+}

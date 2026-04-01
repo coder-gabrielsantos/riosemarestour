@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Destinations({ destinations }) {
-  const cardsPerPage = 5;
+  const [cardsPerPage, setCardsPerPage] = useState(5);
   const [selectedDestination, setSelectedDestination] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
@@ -27,6 +27,19 @@ export default function Destinations({ destinations }) {
   }, []);
 
   useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 639px)");
+
+    function updateCardsPerPage(event) {
+      setCardsPerPage(event.matches ? 4 : 5);
+    }
+
+    setCardsPerPage(mobileQuery.matches ? 4 : 5);
+    mobileQuery.addEventListener("change", updateCardsPerPage);
+
+    return () => mobileQuery.removeEventListener("change", updateCardsPerPage);
+  }, []);
+
+  useEffect(() => {
     const { body, documentElement } = document;
 
     if (selectedDestination) {
@@ -42,6 +55,12 @@ export default function Destinations({ destinations }) {
       documentElement.classList.remove("modal-open");
     };
   }, [selectedDestination]);
+
+  useEffect(() => {
+    if (currentPageIndex > totalPages - 1) {
+      setCurrentPageIndex(totalPages - 1);
+    }
+  }, [currentPageIndex, totalPages]);
 
   function openDestination(destination) {
     setSelectedDestination(destination);

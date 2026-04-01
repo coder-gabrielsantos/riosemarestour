@@ -37,7 +37,7 @@ export default function ContactForm() {
   }
 
   return (
-    <section id="contato" className="relative overflow-hidden py-20">
+    <section id="contato" className="relative overflow-hidden py-14 sm:py-16 lg:py-20">
       <div
         className="absolute inset-0"
         style={{
@@ -48,20 +48,22 @@ export default function ContactForm() {
         }}
       />
       <div className="absolute inset-0 bg-slate-950/55" />
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
-        <div className="grid gap-8 text-white md:grid-cols-2">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-6 text-white sm:gap-8 md:grid-cols-2">
           <div className="self-center">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#42e8df]">
               Fale com a equipe
             </p>
-            <h2 className="mt-3 text-3xl font-bold">Vamos planejar sua proxima viagem?</h2>
+            <h2 className="mt-3 text-2xl font-bold sm:text-3xl">
+              Vamos planejar sua proxima viagem?
+            </h2>
             <p className="mt-4 max-w-md text-sm text-slate-100/90">
               Envie uma mensagem e retornamos com opcoes de roteiro sob medida.
             </p>
           </div>
 
           <form
-            className="space-y-4 rounded-2xl border border-white/25 bg-white/10 p-5 shadow-xl backdrop-blur-md"
+            className="space-y-4 rounded-2xl border border-white/25 bg-white/10 p-4 shadow-xl backdrop-blur-md sm:p-5"
             onSubmit={handleSubmit}
             noValidate
           >

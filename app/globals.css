@@ -13,11 +13,14 @@
   --font-display: var(--font-sora);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  scroll-behavior: smooth;
 }
 
 h1,
@@ -25,6 +28,15 @@ h2,
 h3 {
   font-family: var(--font-sora), var(--font-geist-sans), Arial, Helvetica, sans-serif;
   letter-spacing: -0.01em;
+}
+
+a[href],
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 @keyframes carousel-slide-next {
@@ -50,12 +62,30 @@ h3 {
 }
 
 .carousel-slide-next {
-  animation: carousel-slide-next 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: carousel-slide-next 560ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
 }
 
 .carousel-slide-prev {
-  animation: carousel-slide-prev 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: carousel-slide-prev 560ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+@keyframes destination-rise-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.destination-card-enter {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: destination-rise-fade 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: transform, opacity;
 }
 
@@ -86,4 +116,12 @@ body.modal-open {
 
 .modal-scroll::-webkit-scrollbar-thumb:hover {
   background-color: #7eb7dc;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .destination-card-enter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

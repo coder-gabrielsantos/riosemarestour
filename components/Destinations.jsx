@@ -9,6 +9,7 @@ export default function Destinations({ destinations }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState("next");
+  const [cardsAnimationCycle, setCardsAnimationCycle] = useState(0);
 
   const totalPages = Math.max(1, Math.ceil(destinations.length / cardsPerPage));
   const startIndex = currentPageIndex * cardsPerPage;
@@ -70,6 +71,22 @@ export default function Destinations({ destinations }) {
     );
   }
 
+  function goToPrevPage() {
+    goToPage(currentPageIndex - 1);
+  }
+
+  function goToNextPage() {
+    goToPage(currentPageIndex + 1);
+  }
+
+  function goToPage(index) {
+    const boundedIndex = Math.min(Math.max(index, 0), totalPages - 1);
+    if (boundedIndex !== currentPageIndex) {
+      setCurrentPageIndex(boundedIndex);
+      setCardsAnimationCycle((prev) => prev + 1);
+    }
+  }
+
   const modalImage = selectedDestination?.images?.[currentImageIndex];
 
   function formatDetailedDescription(description) {
@@ -126,7 +143,7 @@ export default function Destinations({ destinations }) {
 
   return (
     <>
-      <section id="destinos" className="mx-auto max-w-6xl px-6 py-20 lg:px-8">
+      <section id="destinos" className="mx-auto max-w-6xl px-6 pb-20 pt-6 lg:px-8">
         <div className="mb-10 flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#2a6eb9]">
@@ -145,12 +162,15 @@ export default function Destinations({ destinations }) {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2">
-          {visibleDestinations.map((destination) => (
+          {visibleDestinations.map((destination, index) => (
             <button
-              key={destination.id}
+              key={`${destination.id}-${cardsAnimationCycle}`}
               type="button"
               onClick={() => openDestination(destination)}
-              className="overflow-hidden rounded-3xl border border-slate-200 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              className={`overflow-hidden rounded-3xl border border-slate-200 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
+                cardsAnimationCycle > 0 ? "destination-card-enter" : ""
+              }`}
+              style={{ animationDelay: `${index * 85}ms` }}
             >
               <div className="relative h-56">
                 {destination.images?.[0] ? (
@@ -176,18 +196,41 @@ export default function Destinations({ destinations }) {
         </div>
 
         {totalPages > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-2">
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={goToPrevPage}
+              disabled={currentPageIndex === 0}
+              className="rounded-full border border-[#b8e6f9] bg-white px-4 py-2 text-sm font-semibold text-[#1f3266] transition hover:border-[#2a6eb9] hover:text-[#2a6eb9] disabled:cursor-not-allowed disabled:opacity-45"
+              aria-label="Página anterior"
+            >
+              Anterior
+            </button>
             {Array.from({ length: totalPages }).map((_, index) => (
               <button
                 key={`dest-page-${index}`}
                 type="button"
-                onClick={() => setCurrentPageIndex(index)}
-                className={`h-2.5 rounded-full transition ${
-                  index === currentPageIndex ? "w-8 bg-[#2a6eb9]" : "w-2.5 bg-slate-300"
+                onClick={() => goToPage(index)}
+                className={`h-10 min-w-10 rounded-full px-3 text-sm font-semibold transition ${
+                  index === currentPageIndex
+                    ? "bg-[#2a6eb9] text-white shadow-sm"
+                    : "border border-slate-200 bg-white text-slate-600 hover:border-[#2a6eb9] hover:text-[#2a6eb9]"
                 }`}
                 aria-label={`Ir para página ${index + 1}`}
-              />
+                aria-current={index === currentPageIndex ? "page" : undefined}
+              >
+                {index + 1}
+              </button>
             ))}
+            <button
+              type="button"
+              onClick={goToNextPage}
+              disabled={currentPageIndex === totalPages - 1}
+              className="rounded-full border border-[#b8e6f9] bg-white px-4 py-2 text-sm font-semibold text-[#1f3266] transition hover:border-[#2a6eb9] hover:text-[#2a6eb9] disabled:cursor-not-allowed disabled:opacity-45"
+              aria-label="Próxima página"
+            >
+              Próximo
+            </button>
           </div>
         )}
       </section>
@@ -211,13 +254,38 @@ export default function Destinations({ destinations }) {
                     {selectedDestination.title}
                   </h3>
                 </div>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
-                >
-                  Fechar
-                </button>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`https://wa.me/558899855698?text=${encodeURIComponent(
+                      `Olá! Tenho interesse no roteiro ${selectedDestination.title}. Pode me passar mais informações?`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full bg-[#2a6eb9] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#205e98]"
+                  >
+                    Quero conhecer
+                  </a>
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-slate-100"
+                    aria-label="Fechar modal"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-4 w-4"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 6L18 18M18 6L6 18"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               <div className="relative">

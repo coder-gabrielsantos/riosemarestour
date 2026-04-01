@@ -8,14 +8,7 @@ export default function Faq({ faqs }) {
   return (
     <section id="faq" className="bg-[#e5ffff] py-14 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#2a6eb9]">
-          Quem somos nós
-        </p>
-        <h2 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
-          Dicas rapidas antes de fechar seu pacote
-        </h2>
-
-        <div className="mt-8 space-y-3">
+        <div className="space-y-3">
           {faqs.map((item) => {
             const isOpen = openId === item.id;
             return (

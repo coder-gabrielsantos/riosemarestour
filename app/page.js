@@ -4,8 +4,8 @@ import Faq from "@/components/Faq";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Packages from "@/components/Packages";
+import { camocimDestinations } from "@/data/camocimDestinations";
 import {
-  destinations,
   faqs,
   navLinks,
   packages,
@@ -16,7 +16,7 @@ export default function Home() {
     <div id="topo" className="bg-white text-slate-900">
       <main>
         <Hero navLinks={navLinks} />
-        <Destinations destinations={destinations} />
+        <Destinations destinations={camocimDestinations} />
         <Packages packagesData={packages} />
         <Faq faqs={faqs} />
         <ContactForm />

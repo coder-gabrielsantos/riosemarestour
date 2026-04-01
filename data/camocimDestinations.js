@@ -89,7 +89,11 @@ Observações Gerais:
 2. Necessidade de disponibilidade para um dia inteiro;
 3. Veículo (buggy) com capacidade para apenas 4 passageiros e veículo (4x4) com capacidade para até 10 passageiros;
 4. Crianças devem estar SEMPRE ACOMPANHADAS de seus pais.`,
-    images: [],
+    images: [
+      "/assets/destinos/jericoacoara/01.jpg",
+      "/assets/destinos/jericoacoara/02.jpg",
+      "/assets/destinos/jericoacoara/03.jpg",
+    ],
   },
   {
     id: "lagoa-do-paraiso",

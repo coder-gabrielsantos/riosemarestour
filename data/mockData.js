@@ -1,6 +1,5 @@
 export const navLinks = [
   { href: "#destinos", label: "Conheça Camocim" },
-  { href: "#pacotes", label: "Passeios" },
   { href: "#faq", label: "Quem somos nós" },
   { href: "#contato", label: "Contato" },
 ];

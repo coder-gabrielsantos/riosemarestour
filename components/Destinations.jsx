@@ -183,7 +183,7 @@ export default function Destinations({ destinations }) {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/25 to-transparent" />
                 </div>
                 <div className="pointer-events-none absolute bottom-0 left-0 p-4 sm:p-5">
-                  <h3 className="text-lg font-medium text-white/95 drop-shadow sm:text-[1.65rem] sm:leading-none">
+                  <h3 className="text-base font-medium text-white/95 drop-shadow sm:text-lg">
                     {destination.title}
                   </h3>
                 </div>
@@ -218,7 +218,7 @@ export default function Destinations({ destinations }) {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/25 to-transparent" />
                 </div>
                 <div className="pointer-events-none absolute bottom-0 left-0 p-4 sm:p-5">
-                  <h3 className="text-base font-medium text-white/95 drop-shadow sm:text-[1.35rem] sm:leading-none">
+                  <h3 className="text-base font-medium text-white/95 drop-shadow sm:text-lg">
                     {destination.title}
                   </h3>
                 </div>
@@ -256,7 +256,7 @@ export default function Destinations({ destinations }) {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/25 to-transparent" />
                 </div>
                 <div className="pointer-events-none absolute bottom-0 left-0 p-4 sm:p-5">
-                  <h3 className="text-base font-medium text-white/95 drop-shadow">
+                  <h3 className="text-base font-medium text-white/95 drop-shadow sm:text-lg">
                     {destination.title}
                   </h3>
                 </div>

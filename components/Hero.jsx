@@ -1,28 +1,42 @@
 "use client";
 
 import { useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import heroBanner from "@/app/util/hero.jpeg";
 import logo from "@/app/util/logo.png";
 
 export default function Hero({ navLinks }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const headerRef = useRef(null);
 
   function handleAnchorClick(event, href) {
     if (!href?.startsWith("#")) return;
 
     event.preventDefault();
-    const target = document.querySelector(href);
-    if (!target) return;
-
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.history.replaceState(null, "", href);
     setIsMobileMenuOpen(false);
+
+    window.requestAnimationFrame(() => {
+      const target = document.querySelector(href);
+      if (!target) return;
+
+      const headerHeight = headerRef.current?.offsetHeight ?? 80;
+      const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 12;
+
+      window.scrollTo({
+        top: Math.max(top, 0),
+        behavior: "smooth",
+      });
+      window.history.replaceState(null, "", href);
+    });
   }
 
   return (
-    <header>
-      <div className="sticky top-0 z-40 border-b border-slate-200/90 bg-white/95 backdrop-blur">
+    <>
+      <div
+        ref={headerRef}
+        className="sticky top-0 z-40 border-b border-[#9ec7e4]/80 bg-white/70 shadow-[0_8px_24px_-18px_rgba(31,50,102,0.55)] backdrop-blur-xl"
+      >
         <nav className="mx-auto flex max-w-7xl items-center px-4 py-3 sm:px-6 lg:px-8">
           <a
             href="#topo"
@@ -53,7 +67,7 @@ export default function Hero({ navLinks }) {
 
           <button
             type="button"
-            className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 text-slate-700 transition hover:bg-slate-50 lg:hidden"
+            className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#9ec7e4]/80 bg-white/80 text-slate-700 shadow-sm backdrop-blur transition hover:scale-[1.02] hover:bg-white lg:hidden"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
             aria-expanded={isMobileMenuOpen}
             aria-label="Abrir menu"
@@ -83,13 +97,17 @@ export default function Hero({ navLinks }) {
           </button>
         </nav>
 
-        {isMobileMenuOpen && (
-          <div className="border-t border-slate-200 px-4 pb-4 pt-3 sm:px-6 lg:hidden">
-            <ul className="space-y-1.5">
+        <div
+          className={`overflow-hidden border-t border-[#9ec7e4]/70 bg-white/85 backdrop-blur-md transition-all duration-300 ease-out lg:hidden ${
+            isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="px-4 pb-4 pt-3 sm:px-6">
+            <ul className="space-y-2">
               {navLinks.map((link) => (
                 <li key={`mobile-${link.href}`}>
                   <a
-                    className="block rounded-lg px-3 py-2 text-sm font-semibold uppercase tracking-[0.06em] text-[#1f3266] transition hover:bg-[#eef7ff] hover:text-[#2a6eb9]"
+                    className="flex items-center justify-between rounded-xl border border-transparent bg-white/75 px-4 py-3 text-sm font-semibold uppercase tracking-[0.06em] text-[#1f3266] transition hover:border-[#b8e6f9] hover:bg-[#eef7ff] hover:text-[#2a6eb9]"
                     href={link.href}
                     onClick={(event) => handleAnchorClick(event, link.href)}
                   >
@@ -99,11 +117,11 @@ export default function Hero({ navLinks }) {
               ))}
             </ul>
           </div>
-        )}
+        </div>
       </div>
 
-      <section className="mb-8 w-full py-0 sm:mx-auto sm:mb-10 sm:max-w-7xl sm:px-6 sm:py-6 lg:px-8">
-        <div className="overflow-hidden sm:rounded-2xl">
+      <section className="mb-8 w-full py-0 sm:mb-10">
+        <div className="overflow-hidden">
           <Image
             src={heroBanner}
             alt="Imagem principal da Rios e Mares Tour"
@@ -113,6 +131,6 @@ export default function Hero({ navLinks }) {
           />
         </div>
       </section>
-    </header>
+    </>
   );
 }

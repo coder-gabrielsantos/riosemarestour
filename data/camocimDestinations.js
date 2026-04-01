@@ -49,7 +49,6 @@ Observações Gerais:
       "/assets/destinos/guriu-laguna/10.jpg",
       "/assets/destinos/guriu-laguna/11.jpg",
       "/assets/destinos/guriu-laguna/12.jpg",
-      "/assets/destinos/guriu-laguna/13.jpg",
     ],
   },
   {

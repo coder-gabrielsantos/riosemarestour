@@ -109,35 +109,26 @@ export default function Destinations({ destinations }) {
 
     const roteiroLine = lines.find((line) => line.startsWith("Roteiro Base:"));
     const saidaLine = lines.find((line) => /^sa[ií]da:/i.test(line));
-    const observationLines = lines.filter((line) => /^\d+\./.test(line));
+    const roteiroText = roteiroLine
+      ? roteiroLine.replace(/^Roteiro Base:\s*/i, "").trim()
+      : "";
 
     return (
-      <div className="space-y-4 text-slate-700">
-        {roteiroLine && (
-          <p className="text-sm leading-7 md:text-[15px]">
-            <span className="font-semibold text-[#1f3266]">Roteiro Base:</span>{" "}
-            <span>{roteiroLine.replace("Roteiro Base:", "").trim()}</span>
+      <div className="space-y-5 text-slate-700">
+        {roteiroText && (
+          <p className="text-[15px] leading-7 text-slate-700 md:text-base md:leading-8">
+            {roteiroText}
           </p>
         )}
 
         {saidaLine && (
-          <p className="text-sm leading-relaxed md:text-[15px]">
-            <span className="font-semibold text-[#1f3266]">Saída:</span>{" "}
+          <p className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm leading-relaxed text-slate-700 md:text-[15px]">
+            <span className="font-semibold text-[#1f3266]">Saída</span>
+            <span className="mx-1.5 text-slate-300">•</span>
             <span className="text-slate-700">
               {saidaLine.replace(/^sa[ií]da:\s*/i, "")}
             </span>
           </p>
-        )}
-
-        {observationLines.length > 0 && (
-          <ul className="space-y-2 text-sm leading-7 md:text-[15px]">
-            {observationLines.map((item) => (
-              <li key={item} className="flex gap-2">
-                <span className="mt-[9px] h-1.5 w-1.5 rounded-full bg-[#2a6eb9]" />
-                <span>{item.replace(/^\d+\.\s*/, "")}</span>
-              </li>
-            ))}
-          </ul>
         )}
       </div>
     );
@@ -307,140 +298,189 @@ export default function Destinations({ destinations }) {
 
       {selectedDestination && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-2 py-4 sm:px-4 sm:py-8"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 px-2 py-4 backdrop-blur-sm sm:px-4 sm:py-8"
           onClick={closeModal}
         >
           <div
-            className="w-full max-w-5xl rounded-2xl bg-white p-1.5 shadow-2xl sm:p-2 md:p-3"
+            className="w-full max-w-6xl rounded-l-2xl rounded-r-none bg-transparent shadow-[0_28px_90px_-30px_rgba(15,23,42,0.8)]"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="modal-scroll max-h-[90vh] overflow-auto rounded-xl bg-white p-3 sm:p-4 md:p-6">
-              <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2a6eb9]">
-                    Conheça Camocim
-                  </p>
-                  <h3 className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
+            <div className="modal-scroll max-h-[90vh] overflow-auto rounded-l-2xl rounded-r-none border border-slate-200/90 bg-white p-4 sm:p-5 md:p-7">
+              <div className="relative mb-4 border-b border-slate-100 pb-4 sm:mb-6 sm:pb-5">
+                <div className="max-w-2xl pr-12 sm:pr-0">
+                  <h3 className="text-[30px] font-bold leading-tight text-slate-900 sm:text-2xl md:text-3xl">
                     {selectedDestination.title}
                   </h3>
+                  <p className="mt-1.5 text-base text-slate-600 sm:mt-2 sm:text-sm md:text-base">
+                    {selectedDestination.shortDescription || "Passeio privativo e personalizado para o seu roteiro."}
+                  </p>
                 </div>
-                <div className="flex items-center gap-2 self-end sm:self-auto">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="absolute right-0 top-0 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
+                  aria-label="Fechar modal"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-4 w-4"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-[1.4fr_1fr] md:items-start">
+                <div>
+                  <div className="relative -mx-4 sm:mx-0">
+                    <div className="relative h-[235px] overflow-hidden rounded-none border-0 bg-slate-100 sm:h-[330px] sm:rounded-2xl sm:border sm:border-slate-200 lg:h-[460px]">
+                      {modalImage ? (
+                        <div
+                          key={`${selectedDestination.id}-${currentImageIndex}-${slideDirection}`}
+                          className={`absolute inset-0 ${
+                            slideDirection === "next"
+                              ? "carousel-slide-next"
+                              : "carousel-slide-prev"
+                          }`}
+                        >
+                          <Image
+                            src={modalImage}
+                            alt={selectedDestination.title}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-sm text-slate-500">
+                          Adicione imagens neste destino para visualizar o carrossel.
+                        </div>
+                      )}
+                    </div>
+
+                    {selectedDestination.images.length > 1 && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={showPrevImage}
+                          className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-white/80 text-slate-700 shadow-lg backdrop-blur transition hover:scale-105 hover:bg-white"
+                          aria-label="Imagem anterior"
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            className="h-5 w-5"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M19 12H6"
+                              stroke="currentColor"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                            />
+                            <path
+                              d="M11 7L6 12L11 17"
+                              stroke="currentColor"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={showNextImage}
+                          className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/60 bg-white/80 text-slate-700 shadow-lg backdrop-blur transition hover:scale-105 hover:bg-white"
+                          aria-label="Próxima imagem"
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            className="h-5 w-5"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5 12H18"
+                              stroke="currentColor"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                            />
+                            <path
+                              d="M13 7L18 12L13 17"
+                              stroke="currentColor"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {selectedDestination.images.length > 1 && (
+                    <>
+                      <div className="mt-4 flex items-center justify-center">
+                        <p className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 sm:text-sm">
+                          {currentImageIndex + 1} de {selectedDestination.images.length}
+                        </p>
+                      </div>
+
+                      <div className="-mx-4 mt-4 grid grid-cols-4 gap-2 px-4 sm:mx-0 sm:grid-cols-6 sm:px-0">
+                        {selectedDestination.images.map((image, index) => (
+                          <button
+                            key={`${selectedDestination.id}-thumb-${image}`}
+                            type="button"
+                            onClick={() => {
+                              setSlideDirection(index > currentImageIndex ? "next" : "prev");
+                              setCurrentImageIndex(index);
+                            }}
+                            className={`relative h-14 overflow-hidden rounded-none border-0 transition sm:h-16 sm:rounded-lg sm:border ${
+                              index === currentImageIndex
+                                ? "sm:border-[#2a6eb9] sm:ring-2 sm:ring-[#2a6eb9]/20"
+                                : "sm:border-slate-200 sm:hover:border-slate-300"
+                            }`}
+                            aria-label={`Visualizar imagem ${index + 1}`}
+                          >
+                            <Image
+                              src={image}
+                              alt={`${selectedDestination.title} - foto ${index + 1}`}
+                              fill
+                              className="object-contain"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <div className="rounded-2xl border border-[#dcecf8] bg-gradient-to-b from-[#f8fcff] to-white p-5">
+                    <div className="mb-4">
+                      <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#1f3266]">
+                        Roteiro
+                      </p>
+                    </div>
+                    {formatDetailedDescription(selectedDestination.detailedDescription)}
+                  </div>
                   <a
                     href={`https://wa.me/558899855698?text=${encodeURIComponent(
                       `Olá! Tenho interesse no roteiro ${selectedDestination.title}. Pode me passar mais informações?`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-full bg-[#2a6eb9] px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-[#205e98] sm:px-4 sm:text-sm"
+                    className="inline-flex w-full items-center justify-center rounded-full bg-[#2a6eb9] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#205e98]"
                   >
                     Quero conhecer
                   </a>
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-slate-100"
-                    aria-label="Fechar modal"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M6 6L18 18M18 6L6 18"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </button>
                 </div>
-              </div>
-
-              <div className="relative">
-                <div className="relative h-[210px] overflow-hidden rounded-xl border border-[#b8e6f9] bg-[#eef7ff] sm:h-[260px] md:h-[420px]">
-                  {modalImage ? (
-                    <div
-                      key={`${selectedDestination.id}-${currentImageIndex}-${slideDirection}`}
-                      className={`absolute inset-0 ${
-                        slideDirection === "next"
-                          ? "carousel-slide-next"
-                          : "carousel-slide-prev"
-                      }`}
-                    >
-                      <Image
-                        src={modalImage}
-                        alt={selectedDestination.title}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-sm text-slate-500">
-                      Adicione imagens neste destino para visualizar o carrossel.
-                    </div>
-                  )}
-                </div>
-
-                {selectedDestination.images.length > 1 && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={showPrevImage}
-                      className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-slate-900/55 text-white shadow-lg backdrop-blur-md transition hover:scale-105 hover:bg-slate-900/70 sm:left-3 sm:h-11 sm:w-11"
-                      aria-label="Imagem anterior"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4 sm:h-5 sm:w-5"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M14.5 6L8.5 12L14.5 18"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={showNextImage}
-                      className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-slate-900/55 text-white shadow-lg backdrop-blur-md transition hover:scale-105 hover:bg-slate-900/70 sm:right-3 sm:h-11 sm:w-11"
-                      aria-label="Próxima imagem"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4 sm:h-5 sm:w-5"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M9.5 6L15.5 12L9.5 18"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {selectedDestination.images.length > 1 && (
-                <div className="mt-4 flex items-center justify-center">
-                  <p className="rounded-full border border-[#b8e6f9] bg-white px-3 py-1 text-xs font-semibold text-[#1f3266] sm:px-4 sm:py-1.5 sm:text-sm">
-                    {currentImageIndex + 1} de {selectedDestination.images.length}
-                  </p>
-                </div>
-              )}
-
-              <div className="mt-5 rounded-xl bg-[#f2f8ff] p-4 sm:mt-6 sm:p-5 md:p-6">
-                {formatDetailedDescription(selectedDestination.detailedDescription)}
               </div>
             </div>
           </div>

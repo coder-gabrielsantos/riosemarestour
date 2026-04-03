@@ -18,7 +18,7 @@ const sora = Sora({
 });
 
 export const metadata = {
-  title: "Rios e Mares Tour | Viagens e Experiências",
+  title: "Rios e Mares Tour",
   description: "Landing page de turismo com roteiros e pacotes personalizados.",
 };
 
